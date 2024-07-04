@@ -1,0 +1,66 @@
+name: Release Feature
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - develop
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+
+      - name: Get branch name and short SHA
+        id: vars
+        run: |
+          BRANCH_NAME=$(echo "${GITHUB_REF#refs/heads/}")
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
+          echo "SHORT_SHA=${SHORT_SHA}" >> $GITHUB_ENV
+
+      - name: Get current version from package.json
+        id: get_version
+        run: |
+          VERSION=$(jq -r '.version' package.json)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+      - name: Create tag
+        id: create_tag
+        run: |
+          TAG_NAME="v${VERSION}-alpha-${SHORT_SHA}"
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
+          echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_ENV
+
+      - name: Generate Changelog
+        id: changelog
+        run: |
+          echo "CHANGELOG" > CHANGELOG.md
+          git log --pretty=format:"* %s (%h)" > CHANGELOG.md
+        shell: bash
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          body_path: ./CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+
+      - name: Add comment to PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+          header: "A new release has been created"
+          message: |
+            Release Tag: `${{ env.TAG_NAME }}`
+            You can view the release [here](https://github.com/${{ github.repository }}/releases/tag/${{ env.TAG_NAME }})
