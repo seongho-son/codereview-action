@@ -24,8 +24,8 @@ export async function getSlackMessage(ts: string) {
 export async function postMessage(blocks: any) {
   const res = await slackClient.chat.postMessage({
     channel: slackChannel,
-    text: "",
     blocks,
+    text: "",
   });
   return res.ts;
 }
@@ -42,8 +42,8 @@ export async function postThreadMessage(ts: string, text: string) {
   if (!text.includes("![image](")) {
     return await slackClient.chat.postMessage({
       channel: slackChannel,
-      text,
       thread_ts: ts,
+      text: text || "",
     });
   }
 
@@ -52,6 +52,7 @@ export async function postThreadMessage(ts: string, text: string) {
     channel: slackChannel,
     blocks: parseTextToBlocks(text),
     thread_ts: ts,
+    text: text || "",
   });
 }
 
