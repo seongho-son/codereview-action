@@ -24,6 +24,7 @@ export async function getSlackMessage(ts: string) {
 export async function postMessage(blocks: any) {
   const res = await slackClient.chat.postMessage({
     channel: slackChannel,
+    text: "",
     blocks,
   });
   return res.ts;
