@@ -42,7 +42,7 @@ export async function postThreadMessage(ts: string, text: string) {
   if (!text.includes("![image](")) {
     return await slackClient.chat.postMessage({
       channel: slackChannel,
-      text,
+      text: text || "",
       thread_ts: ts,
     });
   }
@@ -51,6 +51,7 @@ export async function postThreadMessage(ts: string, text: string) {
   await slackClient.chat.postMessage({
     channel: slackChannel,
     blocks: parseTextToBlocks(text),
+    text: text || "",
     thread_ts: ts,
   });
 }
