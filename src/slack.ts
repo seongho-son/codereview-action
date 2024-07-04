@@ -51,6 +51,7 @@ export async function postThreadMessage(ts: string, text: string) {
   await slackClient.chat.postMessage({
     channel: slackChannel,
     blocks: parseTextToBlocks(text),
+    text,
     thread_ts: ts,
   });
 }
