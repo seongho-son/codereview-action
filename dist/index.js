@@ -43409,6 +43409,10 @@ async function handleReviewSubmitted(octokit, event, reviewers) {
             lastMessage = (0, generate_comment_1.generateComment)(commentAuthor?.name ?? review.user.login, review.body);
         }
     }
+    const assignee = reviewers.reviewers.find((rev) => rev.githubName === pull_request.assignee.login);
+    if (assignee) {
+        lastMessage += `\n<@${assignee.slackId}>`;
+    }
     await (0, slack_1.postThreadMessage)(ts, lastMessage);
 }
 async function listReviewComments(octokit, owner, repo, prNumber) {
@@ -43552,7 +43556,8 @@ async function notifySlack() {
         (0, utils_1.debug)(event);
         const { action, pull_request, comment, review } = event;
         // create slack message when pr opened
-        if (action === "opened" && pull_request) {
+        if ((action === "opened" || action === "converted_to_draft") &&
+            pull_request) {
             return await (0, handle_pr_open_1.handlePROpen)(octokit, event, reviewers);
         }
         // update existing slack message when reviewers added
@@ -43652,6 +43657,7 @@ async function postMessage(blocks) {
     const res = await exports.slackClient.chat.postMessage({
         channel: slackChannel,
         blocks,
+        text: "pr open message",
     });
     return res.ts;
 }
@@ -43675,6 +43681,7 @@ async function postThreadMessage(ts, text) {
         channel: slackChannel,
         blocks: parseTextToBlocks(text),
         thread_ts: ts,
+        text: "post thread message",
     });
 }
 async function addReaction(ts, emoji) {
