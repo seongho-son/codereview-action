@@ -78,12 +78,10 @@ export async function handleReviewSubmitted(
       `:pray: ${requestChangeMessage}\n` + (review.body ?? "") + assigneeMention
     );
   } else {
-    if (review.body) {
-      lastMessage = generateComment(
-        commentAuthorName,
-        review.body + assigneeMention
-      );
-    }
+    lastMessage = generateComment(
+      commentAuthorName,
+      (review.body ?? "") + assigneeMention
+    );
   }
 
   await postThreadMessage(ts, lastMessage);

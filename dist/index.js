@@ -49582,12 +49582,10 @@ ${pendingInterceptorsFormatter.format(pending)}
               assigneeMention
           );
         } else {
-          if (review.body) {
-            lastMessage = (0, generate_comment_1.generateComment)(
-              commentAuthorName,
-              review.body + assigneeMention
-            );
-          }
+          lastMessage = (0, generate_comment_1.generateComment)(
+            commentAuthorName,
+            (review.body ?? "") + assigneeMention
+          );
         }
         await (0, slack_1.postThreadMessage)(ts, lastMessage);
       }
