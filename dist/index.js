@@ -49571,20 +49571,17 @@ ${pendingInterceptorsFormatter.format(pending)}
         if (review.state === "approved") {
           lastMessage = (0, generate_comment_1.generateComment)(
             commentAuthorName,
-            ":white_check_mark: LGTM\n" + (review.body ?? "") + assigneeMention
+            "PR을 승인했습니다." + assigneeMention
           );
         } else if (review.state === "changes_requested") {
-          const requestChangeMessage = i18next_1.default.t("request_changes");
           lastMessage = (0, generate_comment_1.generateComment)(
             commentAuthorName,
-            `:pray: ${requestChangeMessage}\n` +
-              (review.body ?? "") +
-              assigneeMention
+            `코드 변경을 요청했습니다.`+ assigneeMention
           );
         } else {
           lastMessage = (0, generate_comment_1.generateComment)(
             commentAuthorName,
-            (review.body ?? "") + assigneeMention
+            "코멘트를 남겼습니다." + assigneeMention
           );
         }
         await (0, slack_1.postThreadMessage)(ts, lastMessage);
