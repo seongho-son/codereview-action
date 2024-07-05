@@ -69,18 +69,17 @@ export async function handleReviewSubmitted(
   if (review.state === "approved") {
     lastMessage = generateComment(
       commentAuthorName,
-      ":white_check_mark: LGTM\n" + (review.body ?? "") + assigneeMention
+      "PR을 승인했습니다." + assigneeMention
     );
   } else if (review.state === "changes_requested") {
-    const requestChangeMessage = i18n.t("request_changes");
     lastMessage = generateComment(
       commentAuthorName,
-      `:pray: ${requestChangeMessage}\n` + (review.body ?? "") + assigneeMention
+      `코드 변경을 요청했습니다.` + assigneeMention
     );
   } else {
     lastMessage = generateComment(
       commentAuthorName,
-      (review.body ?? "") + assigneeMention
+      "코멘트를 남겼습니다." + assigneeMention
     );
   }
 
