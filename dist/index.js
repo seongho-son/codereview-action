@@ -43662,7 +43662,7 @@ async function postMessage(blocks) {
     const res = await exports.slackClient.chat.postMessage({
         channel: slackChannel,
         blocks,
-        text: "pr open message",
+        text: "",
     });
     return res.ts;
 }
@@ -43678,7 +43678,7 @@ async function postThreadMessage(ts, text) {
     if (!text.includes("![image](")) {
         return await exports.slackClient.chat.postMessage({
             channel: slackChannel,
-            text: text || "post thread message",
+            text: text || "",
             thread_ts: ts,
         });
     }
@@ -43687,7 +43687,7 @@ async function postThreadMessage(ts, text) {
         channel: slackChannel,
         blocks: parseTextToBlocks(text),
         thread_ts: ts,
-        text: "post thread message",
+        text: "",
     });
 }
 async function addReaction(ts, emoji) {
