@@ -68,22 +68,22 @@ export async function handleReviewSubmitted(
     (rev) => rev.githubName === pull_request.assignee?.login
   );
   const assigneeMention = assignee ? `\n<@${assignee.slackId}>` : "";
-  if (review.state === "approved") {
-    lastMessage = generateComment(
-      commentAuthorName,
-      "PR을 승인했습니다." + assigneeMention
-    );
-  } else if (review.state === "changes_requested") {
-    lastMessage = generateComment(
-      commentAuthorName,
-      `코드 변경을 요청했습니다.` + assigneeMention
-    );
-  } else {
-    lastMessage = generateComment(
-      commentAuthorName,
-      "코멘트를 남겼습니다." + assigneeMention
-    );
-  }
+  if (review.state !== "approved") return;
+  lastMessage = generateComment(
+    commentAuthorName,
+    "✅ PR을 승인했습니다." + assigneeMention
+  );
+  // else if (review.state === "changes_requested") {
+  //   lastMessage = generateComment(
+  //     commentAuthorName,
+  //     `코드 변경을 요청했습니다.` + assigneeMention
+  //   );
+  // } else {
+  //   lastMessage = generateComment(
+  //     commentAuthorName,
+  //     "코멘트를 남겼습니다." + assigneeMention
+  //   );
+  // }
 
   await postThreadMessage(ts, lastMessage);
 }

@@ -49568,22 +49568,22 @@ ${pendingInterceptorsFormatter.format(pending)}
           (rev) => rev.githubName === pull_request.assignee?.login
         );
         const assigneeMention = assignee ? `\n<@${assignee.slackId}>` : "";
-        if (review.state === "approved") {
-          lastMessage = (0, generate_comment_1.generateComment)(
-            commentAuthorName,
-            "PR을 승인했습니다." + assigneeMention
-          );
-        } else if (review.state === "changes_requested") {
-          lastMessage = (0, generate_comment_1.generateComment)(
-            commentAuthorName,
-            `코드 변경을 요청했습니다.`+ assigneeMention
-          );
-        } else {
-          lastMessage = (0, generate_comment_1.generateComment)(
-            commentAuthorName,
-            "코멘트를 남겼습니다." + assigneeMention
-          );
-        }
+        if (review.state !== "approved") return;
+        lastMessage = (0, generate_comment_1.generateComment)(
+          commentAuthorName,
+          "✅ PR을 승인했습니다." + assigneeMention
+        );
+        // else if (review.state === "changes_requested") {
+        //   lastMessage = (0, generate_comment_1.generateComment)(
+        //     commentAuthorName,
+        //     `코드 변경을 요청했습니다.`+ assigneeMention
+        //   );
+        // } else {
+        //   lastMessage = (0, generate_comment_1.generateComment)(
+        //     commentAuthorName,
+        //     "코멘트를 남겼습니다." + assigneeMention
+        //   );
+        // }
         await (0, slack_1.postThreadMessage)(ts, lastMessage);
       }
       async function listReviewComments(octokit, owner, repo, prNumber) {
