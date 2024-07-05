@@ -52,6 +52,8 @@ export async function handleReviewSubmitted(
     );
     core.info("Message constructed:");
     core.debug(message);
+    core.info("Event constructed:");
+    core.debug(event);
 
     await postThreadMessage(ts, message);
   }
