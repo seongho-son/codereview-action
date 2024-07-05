@@ -25,7 +25,7 @@ export async function postMessage(blocks: any) {
   const res = await slackClient.chat.postMessage({
     channel: slackChannel,
     blocks,
-    text: "pr open message",
+    text: blocks[0]?.text?.text || "pr open message",
   });
   return res.ts;
 }
@@ -35,7 +35,7 @@ export async function updateMessage(ts: string, blocks: any) {
     channel: slackChannel,
     ts,
     blocks,
-    text: "update pr open message(request review)",
+    text: blocks[0]?.text?.text || "update pr open message(request review)",
   });
 }
 
@@ -53,7 +53,7 @@ export async function postThreadMessage(ts: string, text: string) {
     channel: slackChannel,
     blocks: parseTextToBlocks(text),
     thread_ts: ts,
-    text: "post thread message",
+    text: text || "post thread message",
   });
 }
 
