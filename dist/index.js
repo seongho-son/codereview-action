@@ -49569,10 +49569,7 @@ ${pendingInterceptorsFormatter.format(pending)}
         );
         const assigneeMention = assignee ? `\n<@${assignee.slackId}>` : "";
         if (review.state !== "approved") return;
-        lastMessage = (0, generate_comment_1.generateComment)(
-          commentAuthorName,
-          "✅ PR을 승인했습니다." + assigneeMention
-        );
+        lastMessage = `✅ ${commentAuthorName}: PR을 승인했습니다. ${assigneeMention}`;
         // else if (review.state === "changes_requested") {
         //   lastMessage = (0, generate_comment_1.generateComment)(
         //     commentAuthorName,

@@ -69,10 +69,7 @@ export async function handleReviewSubmitted(
   );
   const assigneeMention = assignee ? `\n<@${assignee.slackId}>` : "";
   if (review.state !== "approved") return;
-  lastMessage = generateComment(
-    commentAuthorName,
-    "✅ PR을 승인했습니다." + assigneeMention
-  );
+  lastMessage = `✅ ${commentAuthorName}: PR을 승인했습니다. ${assigneeMention}`;
   // else if (review.state === "changes_requested") {
   //   lastMessage = generateComment(
   //     commentAuthorName,
