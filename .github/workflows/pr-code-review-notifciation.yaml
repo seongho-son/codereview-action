@@ -35,7 +35,7 @@ jobs:
       - name: Notify Slack
         uses: ./
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.CODEREVIEWBOT_GITHUB_TOKEN }}
           slack_token: ${{ secrets.SLACK_TOKEN }}
           slack_channel:
           slack_workspace:

@@ -54,12 +54,12 @@ jobs:
           tag_name: ${{ env.TAG_NAME }}
           body_path: ./CHANGELOG.md
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CODEREVIEWBOT_GITHUB_TOKEN }}
 
       - name: Add comment to PR
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CODEREVIEWBOT_GITHUB_TOKEN }}
           header: "A new release has been created"
           message: |
             Release Tag: `${{ env.TAG_NAME }}`
