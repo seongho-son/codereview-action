@@ -43,7 +43,7 @@ export async function postThreadMessage(ts: string, text: string) {
   if (!text.includes("![image](")) {
     return await slackClient.chat.postMessage({
       channel: slackChannel,
-      text,
+      text: text || "post thread message",
       thread_ts: ts,
     });
   }
