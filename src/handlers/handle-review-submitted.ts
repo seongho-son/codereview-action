@@ -46,15 +46,14 @@ export async function handleReviewSubmitted(
     const commentAuthor = reviewers.reviewers.find(
       (rev) => rev.githubName === comment.user?.login
     );
-    const message = generateComment(
-      commentAuthor?.name ?? comment.user?.login ?? "bot",
-      comment.body
-    );
+    const commentAuthorName =
+      commentAuthor?.name ?? review.user?.login ?? "bot";
+    core.info("commentAuthorName:");
+    core.debug(commentAuthorName);
+    if (commentAuthorName === "cr-gpt[bot]") return;
+    const message = generateComment(commentAuthorName, comment.body);
     core.info("Message constructed:");
     core.debug(message);
-    core.info("Event constructed:");
-    core.debug(event);
-
     await postThreadMessage(ts, message);
   }
 
