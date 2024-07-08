@@ -54,7 +54,6 @@ export async function handleReviewSubmitted(
     const message = generateComment(commentAuthorName, comment.body);
     core.info("Message constructed:");
     core.debug(message);
-
     await postThreadMessage(ts, message);
   }
 

@@ -49550,8 +49550,13 @@ ${pendingInterceptorsFormatter.format(pending)}
           const commentAuthor = reviewers.reviewers.find(
             (rev) => rev.githubName === comment.user?.login
           );
+          const commentAuthorName =
+            commentAuthor?.name ?? review.user?.login ?? "bot";
+          core.info("commentAuthorName:");
+          core.debug(commentAuthorName);
+          if (commentAuthorName === "cr-gpt[bot]") return;
           const message = (0, generate_comment_1.generateComment)(
-            commentAuthor?.name ?? comment.user?.login ?? "bot",
+            commentAuthorName,
             comment.body
           );
           core.info("Message constructed:");
