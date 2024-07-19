@@ -49554,7 +49554,7 @@ ${pendingInterceptorsFormatter.format(pending)}
             commentAuthor?.name ?? review.user?.login ?? "bot";
           core.info("commentAuthorName:");
           core.debug(commentAuthorName);
-          if (commentAuthorName === "cr-gpt[bot]") return;
+          if (commentAuthorName === "Groupbyofficial") return;
           const message = (0, generate_comment_1.generateComment)(
             commentAuthorName,
             comment.body
@@ -49574,7 +49574,7 @@ ${pendingInterceptorsFormatter.format(pending)}
         );
         const assigneeMention = assignee ? `\n<@${assignee.slackId}>` : "";
         if (review.state !== "approved") return;
-        lastMessage = `✅ ${commentAuthorName}: PR을 승인했습니다. ${assigneeMention}`;
+        lastMessage = `✅ ${commentAuthorName}님이 PR을 승인했습니다! ✅ ${assigneeMention}`;
         // else if (review.state === "changes_requested") {
         //   lastMessage = (0, generate_comment_1.generateComment)(
         //     commentAuthorName,
