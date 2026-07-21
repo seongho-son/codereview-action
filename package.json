@@ -1,6 +1,6 @@
 {
   "name": "codereview-action",
-  "version": "1.0.31",
+  "version": "1.0.32",
   "description": "",
   "exports": {
     ".": "./dist/index.js"
