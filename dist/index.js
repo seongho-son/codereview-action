@@ -49941,6 +49941,39 @@ ${pendingInterceptorsFormatter.format(pending)}
       const slackToken = core.getInput("slack_token");
       const slackChannel = core.getInput("slack_channel");
       exports.slackClient = new web_api_1.WebClient(slackToken);
+      // https://api.slack.com/reference/block-kit/blocks#section
+      const SLACK_SECTION_TEXT_LIMIT = 3000;
+      const CODE_FENCE = "```";
+      const TRUNCATION_NOTICE = "\n\u2026 (truncated, see the PR for full text)";
+      // Slack rejects the whole message(invalid_blocks) when a section exceeds
+      // the limit, so long PR bodies and comments are cut instead of losing the
+      // notification.
+      function truncateSectionText(text) {
+        if (text.length <= SLACK_SECTION_TEXT_LIMIT) return text;
+        const kept = text.slice(
+          0,
+          SLACK_SECTION_TEXT_LIMIT - TRUNCATION_NOTICE.length - CODE_FENCE.length
+        );
+        // cutting inside a code block would drop its closing fence
+        const isInsideCodeBlock = (kept.split(CODE_FENCE).length - 1) % 2 === 1;
+        return isInsideCodeBlock
+          ? `${kept}${TRUNCATION_NOTICE}${CODE_FENCE}`
+          : `${kept}${TRUNCATION_NOTICE}`;
+      }
+      function truncateBlocks(blocks) {
+        if (!Array.isArray(blocks)) return blocks;
+        return blocks.map((block) =>
+          typeof block?.text?.text === "string"
+            ? {
+                ...block,
+                text: {
+                  ...block.text,
+                  text: truncateSectionText(block.text.text),
+                },
+              }
+            : block
+        );
+      }
       async function getSlackMessage(ts) {
         const result = await exports.slackClient.conversations.history({
           channel: slackChannel,
@@ -49956,7 +49989,7 @@ ${pendingInterceptorsFormatter.format(pending)}
       async function postMessage(blocks) {
         const res = await exports.slackClient.chat.postMessage({
           channel: slackChannel,
-          blocks,
+          blocks: truncateBlocks(blocks),
           text: blocks[0]?.text?.text || "pr open message",
         });
         return res.ts;
@@ -49965,7 +49998,7 @@ ${pendingInterceptorsFormatter.format(pending)}
         await exports.slackClient.chat.update({
           channel: slackChannel,
           ts,
-          blocks,
+          blocks: truncateBlocks(blocks),
           text:
             blocks[0]?.text?.text || "update pr open message(request review)",
         });
@@ -49981,7 +50014,7 @@ ${pendingInterceptorsFormatter.format(pending)}
         // support image
         await exports.slackClient.chat.postMessage({
           channel: slackChannel,
-          blocks: parseTextToBlocks(text),
+          blocks: truncateBlocks(parseTextToBlocks(text)),
           thread_ts: ts,
           text: text || "post thread message",
         });
