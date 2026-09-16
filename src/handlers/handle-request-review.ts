@@ -6,6 +6,7 @@ import { Reviewers } from "../types";
 import { debug } from "../utils";
 import { findSlackTsInComments } from "./common/find-slack-ts-in-comments";
 import { getReviewerSlackId } from "./common/get-reviewer-slack-id";
+import { handlePROpen } from "./handle-pr-open";
 
 export async function handleRequestReview(
   octokit: any,
@@ -20,7 +21,9 @@ export async function handleRequestReview(
   const newReviewers = getReviewerSlackId(event, reviewers);
 
   const slackTs = await findSlackTsInComments(octokit, prNumber, owner, repo);
-  if (!slackTs) return;
+  // 열림 알림이 없는 PR(예: dev PR은 opened 이벤트가 스킵됨)은 업데이트할
+  // 메시지가 없으므로, 리뷰어 지정 시점에 새 메시지를 생성한다.
+  if (!slackTs) return await handlePROpen(octokit, event, reviewers);
   const slackMessage = await getSlackMessage(slackTs);
   const blocks = slackMessage?.blocks ?? [];
 
