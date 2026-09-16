@@ -49313,6 +49313,7 @@ ${pendingInterceptorsFormatter.format(pending)}
       const utils_1 = __nccwpck_require__(442);
       const find_slack_ts_in_comments_1 = __nccwpck_require__(4945);
       const get_reviewer_slack_id_1 = __nccwpck_require__(5226);
+      const handle_pr_open_1 = __nccwpck_require__(840);
       async function handleRequestReview(octokit, event, reviewers) {
         const { pull_request } = event;
         const owner = github.context.repo.owner;
@@ -49329,7 +49330,12 @@ ${pendingInterceptorsFormatter.format(pending)}
           owner,
           repo
         );
-        if (!slackTs) return;
+        if (!slackTs)
+          return await (0, handle_pr_open_1.handlePROpen)(
+            octokit,
+            event,
+            reviewers
+          );
         const slackMessage = await (0, slack_1.getSlackMessage)(slackTs);
         const blocks = slackMessage?.blocks ?? [];
         if (!blocks?.length) return;
